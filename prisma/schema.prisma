@@ -43,8 +43,7 @@ model Test {
 
 model TeacherDiscipline{
   id       Int    @id @default(autoincrement())
-  name    String  @unique 
-
+  
   Teacher Teacher @relation(fields: [teacherId], references: [id])
   teacherId Int 
 
@@ -53,6 +52,7 @@ model TeacherDiscipline{
 
   Test Test []
 
+  @@unique([teacherId, disciplineId])
   @@map("teachersDisciplines")
 }
 
