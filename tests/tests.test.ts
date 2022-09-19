@@ -31,7 +31,6 @@ describe('Test POST /signup', () => {
     const user = await userFactory();
     delete user.confirmPassword;
 
-    await supertest(app).post(`/signup`).send(user);
     const result = await supertest(app).post(`/signup`).send(user);
 
     expect(result.status).toBe(422);
@@ -79,7 +78,6 @@ describe('Test POST /test', () => {
 
     await supertest(app).post(`/signup`).send(user);
     const loggedUser = await supertest(app).post(`/signin`).send({email: user.email, password: user.password});
-    console.log(loggedUser)
 
     const test = await testFactory();
     const result = await supertest(app).post(`/test`).send(test).set('Authorization', loggedUser.body.token);
@@ -93,7 +91,6 @@ describe('Test POST /test', () => {
 
     await supertest(app).post(`/signup`).send(user);
     const loggedUser = await supertest(app).post(`/signin`).send({email: user.email, password: user.password});
-    console.log(loggedUser)
 
     const test = await testFactory();
     await supertest(app).post(`/test`).send(test).set('Authorization', loggedUser.body.token);
@@ -118,7 +115,6 @@ describe('Test POST /test', () => {
     const test = await testFactory();
     delete test.discipline;
 
-    await supertest(app).post(`/test`).send(test).set('Authorization', loggedUser.body.token);
     const result = await supertest(app).post(`/test`).send(test).set('Authorization', loggedUser.body.token);
 
     expect(result.status).toBe(422);
@@ -133,7 +129,6 @@ describe('Test POST /test', () => {
     const test = await testFactory();
     test.category = 'duck';
 
-    await supertest(app).post(`/test`).send(test).set('Authorization', loggedUser.body.token);
     const result = await supertest(app).post(`/test`).send(test).set('Authorization', loggedUser.body.token);
 
     expect(result.status).toBe(404);
@@ -142,11 +137,42 @@ describe('Test POST /test', () => {
 });
 
 describe('Test GET /tests/disciplines', () => {
-  it('Deve listar todos os memes e retornar um array e o status 200', async () => {
-    const result = await supertest(app).get(`/memes`).send();
+  it('Should get all tests grouped by disciplines and return a array with status 200', async () => {
+    const user = await userFactory();
+
+    await supertest(app).post(`/signup`).send(user);
+    const loggedUser = await supertest(app).post(`/signin`).send({email: user.email, password: user.password});
+    
+    const result = await supertest(app).get(`/tests/disciplines`).set('Authorization', loggedUser.body.token);
 
     expect(result.status).toBe(200);
     expect(result.body).toBeInstanceOf(Array);
+  });
+
+  it('Should get all tests grouped by disciplines without an token and return status 401', async () => {    
+    const result = await supertest(app).get(`/tests/disciplines`)
+
+    expect(result.status).toBe(401);
+  });
+});
+
+describe('Test GET /tests/teachers', () => {
+  it('Should get all tests grouped by teachers and return a array with status 200', async () => {
+    const user = await userFactory();
+
+    await supertest(app).post(`/signup`).send(user);
+    const loggedUser = await supertest(app).post(`/signin`).send({email: user.email, password: user.password});
+    
+    const result = await supertest(app).get(`/tests/teachers`).set('Authorization', loggedUser.body.token);
+
+    expect(result.status).toBe(200);
+    expect(result.body).toBeInstanceOf(Array);
+  });
+
+  it('Should get all tests grouped by teachers without an token and return status 401', async () => {    
+    const result = await supertest(app).get(`/tests/teachers`)
+
+    expect(result.status).toBe(401);
   });
 });
 
