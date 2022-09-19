@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import {SignUpUserData, SignInUserData} from "../types/userTypes"
-
 import userService from '../services/userService';
 
 export async function signUp(req: Request, res: Response) {

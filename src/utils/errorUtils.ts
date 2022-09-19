@@ -23,6 +23,7 @@ export function conflictError(message?: string): AppError {
 }
 
 export function notFoundError(message?: string): AppError {
+  console.log(message)
   return { type: "not_found", message };
 }
 

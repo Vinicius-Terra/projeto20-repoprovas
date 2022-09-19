@@ -5,7 +5,7 @@ export interface ICreateTestData{
     pdfurl: string;
     category: string;
     teacher: string;
-    Discipline: string;
+    discipline: string;
 }
 
 export type TypeCreateTestData = Omit<Test, "id">

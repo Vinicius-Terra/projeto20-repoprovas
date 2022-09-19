@@ -7,3 +7,11 @@ export async function insertTest(user: TypeCreateTestData) {
     data: user
   });
 }
+
+export async function findByUrl(pdfurl: string) {
+  return prisma.test.findFirst({
+    where: {
+      pdfurl
+    }
+  });
+}
